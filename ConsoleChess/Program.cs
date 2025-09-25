@@ -1,37 +1,55 @@
 ﻿using ConsoleChess;
 
-Board board = new Board();
-board.InitBoard();
-bool isRunning = true;
-
-while (isRunning)
+internal class Program
 {
-    DrawBoard(board);
-    Move? move = null;
-    while (move == null)
+    private static void Main(string[] args)
     {
-        Console.Write("Enter move: ");
-        move = Move.Parse(Console.ReadLine());
-        if (move == null)
-            Console.WriteLine("Invalid input, try again!");
-    }
-    board.ApplyMove(move);
-}
+        Board board = new Board();
+        board.InitBoard();
+        bool isRunning = true;
 
-void DrawBoard(Board board)
-{
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
+        while (isRunning)
         {
-            if(board.Squares[i, j] != null)
-                Console.Write(board.Squares[i, j] + " ");
-            else Console.Write("_ ");
+            DrawBoard(board);
+            Move? move = null;
+            while (move == null)
+            {
+                Console.Write("Enter move: ");
+                move = Move.Parse(Console.ReadLine()!);
+                Piece piece = board.Squares[move!.FromRow, move.FromCol]!;
+                if (move == null || piece == null)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid input, try again!");
+                }
+                else if (!MoveValidator.IsValidMove(piece, move, board))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid move, try again!");
+                }
+            }
+            board.ApplyMove(move);
+            Console.Clear();
         }
-        Console.WriteLine();
+
+        void DrawBoard(Board board)
+        {
+            Console.WriteLine("  a b c d e f g h");
+            for (int row = 0; row < 8; row++)
+            {
+                Console.Write(8 - row);
+                Console.Write(" ");
+
+                for (int col = 0; col < 8; col++)
+                {
+                    Piece? piece = board.Squares[row, col];
+                    Console.Write(piece?.ToString() ?? ".");
+                    Console.Write(" ");
+                }
+
+                Console.WriteLine(8 - row);
+            }
+            Console.WriteLine("  a b c d e f g h");
+        }
     }
 }
-
-
-
-
