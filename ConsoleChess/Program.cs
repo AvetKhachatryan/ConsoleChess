@@ -16,13 +16,13 @@ internal class Program
             {
                 Console.Write("Enter move: ");
                 move = Move.Parse(Console.ReadLine()!);
-                Piece piece = board.Squares[move!.FromRow, move.FromCol]!;
-                if (move == null || piece == null)
+                if (move == null)
                 {
-                    Console.Clear();
                     Console.WriteLine("Invalid input, try again!");
+                    continue;
                 }
-                else if (!MoveValidator.IsValidMove(piece, move, board))
+                Piece piece = board.Squares[move!.FromRow, move.FromCol]!;
+                if (piece == null ||  !MoveValidator.IsValidMove(piece, move, board))
                 {
                     Console.Clear();
                     Console.WriteLine("Invalid move, try again!");
